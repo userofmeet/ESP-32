@@ -1,0 +1,60 @@
+#include <Servo.h>
+
+// Define the pins for the ultrasonic sensor
+const int trigPin = 5; // Trig pin of the ultrasonic sensor connected to GPIO 5
+const int echoPin = 18; // Echo pin of the ultrasonic sensor connected to GPIO 18
+
+// Define the pin for the servo motor
+const int servoPin = 12; // Servo control pin connected to GPIO 12
+
+// Create a Servo object
+Servo myServo;
+
+// Function to calculate distance using the ultrasonic sensor
+long readUltrasonicDistance() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  long duration = pulseIn(echoPin, HIGH);
+  long distance = (duration * 0.034) / 2; // Calculate distance in cm
+  return distance;
+}
+
+void setup() {
+  // Initialize serial communication for debugging
+  Serial.begin(115200);
+
+  // Set the trigPin as OUTPUT and echoPin as INPUT
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  // Attach the servo motor to the servo pin
+  myServo.attach(servoPin);
+
+  // Initialize the servo motor to 0 degrees
+  myServo.write(0);
+}
+
+void loop() {
+  // Read the distance from the ultrasonic sensor
+  long distance = readUltrasonicDistance();
+
+  // Print the distance to the serial monitor
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  // Check if the distance is less than 10 cm
+  if (distance < 10) {
+    // Rotate the servo motor to 90 degrees
+    myServo.write(90);
+  } else {
+    // Rotate the servo motor back to 0 degrees
+    myServo.write(0);
+  }
+
+  // Wait for a short period before the next loop
+  delay(500);
+}
