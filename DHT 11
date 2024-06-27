@@ -1,0 +1,25 @@
+#include <dht.h>
+#define DHTPIN 5
+
+#define DHTTYPE DHT11 // DHT sensor type (DHT11)
+
+DHT dht (DHTPIN, DHTTYPE);
+
+void setup() 
+{
+Serial.begin(9600); // Initialize serial communication.
+dht.begin(); // Initialize the DHT sensor.
+}
+
+void loop() 
+{
+delay(2000); // Wait for 2 seconds between readings
+float humidity = dht.readHumidity(); // Read humidity value
+float temperature = dht.readTemperature(); // Read the temperature value in Celsius.
+Serial.print("Humidity: ");
+Serial.print(humidity);
+Serial.print("%\t");
+Serial.print("Temperature: ");
+Serial.print(temperature);
+Serial.println("°C")
+}
